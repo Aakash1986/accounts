@@ -1,9 +1,11 @@
 # accounts
 
 # Post Request from postman
-#localhost:8080/nordea/v1/accounts
-#Parameter for post
-{
+
+# localhost:8080/nordea/v1/accounts
+
+# Parameter for post
+ {
     "account_name": "Brukskonto",
           "account_nickname": "Min Brukskonto",
           "account_owner_name": "Ola Nordmann",
@@ -27,7 +29,9 @@
 }
 
 # Get Request from postman
-#localhost:8080/nordea/v1/accounts
+
+# localhost:8080/nordea/v1/accounts
+
 # Get Response
 
 {
