@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Scope(value = "Singleton")
 public class AccountNumber {
 
-    final static Logger logger = Logger.getLogger(AccountNumber.class);
+    private static final Logger logger = Logger.getLogger(AccountNumber.class);
 
     private static AccountNumber accountNumber;
 
@@ -25,13 +26,8 @@ public class AccountNumber {
 
     private AccountNumber(){}
 
-
     static{
-        try{
-            accountNumber = new AccountNumber();
-        }catch(Exception e){
-            throw new RuntimeException("Exception occured in creating singleton instance");
-        }
+        accountNumber = new AccountNumber();
     }
 
     public static AccountNumber getInstance(){
@@ -54,19 +50,21 @@ public class AccountNumber {
     }
     private Long getMaxAccountNumber(){
         ObjectMapper mapper = new ObjectMapper();
-        List<Account> accountList = null;
+        List<Account> accountList = new ArrayList<>();
         try {
-            System.out.println(this.getClass().getResource(PATH).getPath());
+            logger.debug("Account List Path :"+this.getClass().getResource(PATH).getPath());
             accountList = mapper.readValue(new File(this.getClass().getResource(PATH).getPath()), new TypeReference<List<Account>>(){});
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error thrown while fetching Account List",e);
         }
-        Account acc = accountList.stream()
-                .max(Comparator.comparing(Account::getAccountNumber))
-                .orElseThrow(NoSuchElementException::new);
-        logger.info("Account Number Returned is "+ acc.getAccountNumber());
-        return acc.getAccountNumber();
+        if(!accountList.isEmpty()) {
+            Account acc = accountList.stream()
+                    .max(Comparator.comparing(Account::getAccountNumber))
+                    .orElseThrow(NoSuchElementException::new);
+            logger.info("Account Number Returned is " + acc.getAccountNumber());
+            return acc.getAccountNumber();
+        }
+        return at.incrementAndGet();
     }
-
 }
 

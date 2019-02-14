@@ -12,16 +12,13 @@ public class ValidateStringValidator implements ConstraintValidator<ValidateStri
     private List<String> valueList;
 
     public void initialize(ValidateStringValue validate) {
-        valueList = new ArrayList<String>();
+        valueList = new ArrayList<>();
         for(String val : validate.acceptedValues()) {
             valueList.add(val.toUpperCase());
         }
     }
 
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        if(!valueList.contains(value.toUpperCase())) {
-            return false;
-        }
-        return true;
+        return valueList.contains(value.toUpperCase());
     }
 }

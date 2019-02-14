@@ -5,16 +5,17 @@ import com.nordea.account.model.AccountNumber;
 import com.nordea.account.model.Accountlist;
 import com.nordea.account.repository.AccountRepository;
 import com.nordea.account.service.AccountService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 
+    private static final Logger logger = Logger.getLogger(AccountServiceImpl.class);
+
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     public Accountlist getAccounts() {
         return accountRepository.getAccounts();
@@ -22,18 +23,17 @@ public class AccountServiceImpl implements AccountService {
 
     public Account createAccounts(Account account) {
         account.setStatus("Open");
+        if(account.getAccountNickname().isEmpty())
+            account.setAccountNickname(account.getAccountName());
         account.setAvailableBalance("0");
         account.setBookedBalance("0");
-        try {
-            account.setAccountNumber(getAccountNumber());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return accountRepository.OpenAccount(account);
+        account.setAccountNumber(getAccountNumber());
+        return accountRepository.openAccount(account);
     }
 
-    private Long getAccountNumber() throws IOException {
+    private Long getAccountNumber(){
         AccountNumber accountNumber = AccountNumber.getInstance();
+        logger.debug("Account Number is "+ accountNumber.getNextAccount());
         return accountNumber.getNextAccount();
 
     }

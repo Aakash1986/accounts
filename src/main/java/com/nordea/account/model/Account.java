@@ -50,7 +50,7 @@ public class Account {
     private String bookedBalance;
 
     @JsonProperty("status")
-    private String Status;
+    private String status;
 
     public long getAccountNumber() {
         return accountNumber;
@@ -117,10 +117,10 @@ public class Account {
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(String status) {
-        Status = status;
+        this.status = status;
     }
 }

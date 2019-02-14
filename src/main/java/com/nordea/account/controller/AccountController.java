@@ -5,7 +5,9 @@ import com.nordea.account.model.Account;
 import com.nordea.account.model.Accountlist;
 import com.nordea.account.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
@@ -34,8 +36,8 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Account creatAccounts(@RequestBody @Valid Account account){
-        return accountService.createAccounts(account);
+    public @ResponseBody ResponseEntity creatAccounts(@RequestBody @Valid Account account){
+        return new ResponseEntity(accountService.createAccounts(account), HttpStatus.CREATED );
     }
 
 }
